@@ -1,150 +1,278 @@
-# RAG Demo — 100% Free, No API Keys Needed
+# 🤖 RAG Document Q&A System
 
-![Python](https://img.shields.io/badge/Python-3.11-blue)
-![Free](https://img.shields.io/badge/Cost-100%25%20Free-brightgreen)
-![LangChain](https://img.shields.io/badge/LangChain-0.1-green)
-![ChromaDB](https://img.shields.io/badge/ChromaDB-0.5-purple)
-![Ollama](https://img.shields.io/badge/LLM-Ollama%20Mistral-orange)
-![AWS](https://img.shields.io/badge/AWS-Lambda%20%2B%20S3-orange)
+![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python)
+![Streamlit](https://img.shields.io/badge/Streamlit-Live-FF4B4B?style=for-the-badge&logo=streamlit)
+![LangChain](https://img.shields.io/badge/LangChain-0.1-green?style=for-the-badge)
+![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector_DB-purple?style=for-the-badge)
+![Ollama](https://img.shields.io/badge/Ollama-Mistral_7B-orange?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
-A production-grade **Retrieval-Augmented Generation (RAG)** system — runs completely free on your laptop OR deploys to AWS. No OpenAI key, no paid APIs, zero cost.
+> **Production-grade RAG (Retrieval-Augmented Generation) system** — upload any PDF or TXT document and ask AI-powered questions. Runs 100% locally with no API keys required, and deploys to the cloud via Streamlit.
 
----
+## 🌐 Live Demo
 
-## Free Tech Stack
-
-| Component | Free Tool | Why |
-|-----------|-----------|-----|
-| Embeddings | `sentence-transformers` (all-MiniLM-L6-v2) | 80MB, runs locally, great quality |
-| LLM | Ollama + Mistral 7B | Runs on your CPU/GPU, 100% private |
-| Vector DB | ChromaDB | Embedded, no server needed |
-| Orchestration | LangChain | Open source |
-| Cloud (optional) | AWS Lambda + S3 + EFS | Free tier covers light usage |
+**[➡️ Try it here: aws-rag-demo-y7opipexkimfykf9thrhbg.streamlit.app](https://aws-rag-demo-y7opipexkimfykf9thrhbg.streamlit.app/)**
 
 ---
 
-## Architecture
+## 📸 Screenshots
+
+### Chat Interface
+> *Upload a document, ask questions, get AI-powered answers with source citations*
+
+<!-- Replace with your actual screenshot -->
+![Chat Interface](screenshots/chat_interface.png)
+
+### Document Upload & Ingestion
+> *Drag and drop any PDF or TXT — automatically chunked, embedded and stored*
+
+<!-- Replace with your actual screenshot -->
+![Document Upload](screenshots/document_upload.png)
+
+---
+
+## 🏗️ Architecture
 
 ```
-Your Documents (PDF / TXT)
+Your Document (PDF / TXT)
          │
          ▼
-  [Local] run_local.py ingest    OR    [AWS] S3 Upload → Lambda
-         │                                      │
-   sentence-transformers                sentence-transformers
-   (free local embeddings)              (free local embeddings)
-         │                                      │
-         ▼                                      ▼
-    ChromaDB (local)                   ChromaDB (AWS EFS)
-         │                                      │
-         ▼                                      ▼
-  [Local] run_local.py ask       OR    [AWS] API Gateway → Lambda
-         │                                      │
-    Ollama Mistral 7B                  Ollama Mistral 7B
-    (free local LLM)                   (or swap in any LLM)
-         │                                      │
-         ▼                                      ▼
-       Answer ✓                             Answer ✓
+   ┌─────────────────┐
+   │   Document      │  PyPDFLoader / TextLoader
+   │   Loader        │
+   └────────┬────────┘
+            │
+            ▼
+   ┌─────────────────┐
+   │   Text          │  RecursiveCharacterTextSplitter
+   │   Chunker       │  500 tokens, 50 overlap
+   └────────┬────────┘
+            │
+            ▼
+   ┌─────────────────┐
+   │   Embeddings    │  sentence-transformers
+   │   Model         │  all-MiniLM-L6-v2 (FREE, local)
+   └────────┬────────┘
+            │
+            ▼
+   ┌─────────────────┐
+   │   ChromaDB      │  Persistent vector store
+   │   Vector Store  │  Cosine similarity search
+   └────────┬────────┘
+            │
+   User Question ──► Embed ──► Similarity Search ──► Top-K Chunks
+                                                           │
+                                                           ▼
+                                                   ┌──────────────┐
+                                                   │  Ollama LLM  │  Mistral 7B
+                                                   │  (local)     │  (FREE)
+                                                   └──────┬───────┘
+                                                          │
+                                                          ▼
+                                                       Answer ✓
 ```
 
 ---
 
-## Quick Start — Local (No AWS Needed)
+## ✨ Features
 
-### Step 1: Install dependencies
+- 📄 **Upload any PDF or TXT** — drag and drop in the browser
+- 🧠 **100% free embeddings** — sentence-transformers runs locally, no API key
+- 🔍 **Semantic search** — finds the most relevant chunks using cosine similarity
+- 💬 **Chat interface** — multi-turn Q&A with full conversation history
+- 📚 **Source citations** — every answer shows exactly which document chunk was used
+- 🔄 **Multiple LLM support** — works with any Ollama model (Mistral, LLaMA3, Phi3)
+- ☁️ **Cloud deployable** — live on Streamlit Cloud
+- 🗑️ **Database management** — clear and re-ingest documents anytime
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology | Why |
+|-------|-----------|-----|
+| **UI** | Streamlit | Fast, beautiful web UI with minimal code |
+| **Embeddings** | sentence-transformers (`all-MiniLM-L6-v2`) | Free, fast, local — no API key |
+| **Vector DB** | ChromaDB | Embedded, persistent, no server needed |
+| **LLM** | Ollama + Mistral 7B | Free, private, runs on CPU |
+| **Orchestration** | LangChain | Document loading, splitting, pipelines |
+| **Cloud** | Streamlit Cloud | Free hosting with GitHub integration |
+| **Optional** | AWS Lambda + S3 + EFS | Serverless cloud deployment |
+
+---
+
+## 🚀 Quick Start — Local Setup
+
+### Prerequisites
+- Python 3.9+
+- [Ollama](https://ollama.com/download) installed
+
+### 1. Clone the repo
 ```bash
 git clone https://github.com/arshiefatima/aws-rag-demo
 cd aws-rag-demo
-pip install -r ingest/requirements.txt -r query/requirements.txt
 ```
 
-### Step 2: Install Ollama (free local LLM)
+### 2. Create virtual environment
 ```bash
-# Mac
-brew install ollama
+python -m venv venv
 
-# Linux
-curl -fsSL https://ollama.ai/install.sh | sh
+# Mac/Linux
+source venv/bin/activate
 
-# Windows — download from https://ollama.com/download
+# Windows
+venv\Scripts\activate
 ```
 
-### Step 3: Pull Mistral model and start Ollama
+### 3. Install dependencies
 ```bash
-ollama pull mistral       # downloads ~4GB once
-ollama serve              # keep this running in a separate terminal
+pip install -r requirements.txt
 ```
 
-### Step 4: Ingest your documents
+### 4. Start Ollama and pull Mistral
 ```bash
-# Put any PDF or TXT in the docs/ folder, then:
-python run_local.py ingest docs/your_resume.pdf
+ollama pull mistral
+ollama serve      # keep this running in a separate terminal
 ```
 
-### Step 5: Ask questions
+### 5. Run the Streamlit app
 ```bash
-python run_local.py ask "What are the main skills in this resume?"
+streamlit run streamlit_app.py
+```
 
-# Or interactive chat mode:
+Open your browser at **http://localhost:8501** 🎉
+
+### Or use the command-line interface
+```bash
+# Ingest a document
+python run_local.py ingest docs/your_document.pdf
+
+# Ask a question
+python run_local.py ask "What are the main topics in this document?"
+
+# Interactive chat
 python run_local.py chat
 ```
 
 ---
 
-## Example Output
-
-```
-Question: What programming languages does Arshie know?
-
-Answer:
-Based on the resume, Arshie knows Python, Core Java, C, and C++.
-She also has experience with JavaScript, HTML, and CSS for web technologies.
-
-Sources used:
-  [1] resume.pdf (page 1) — Programming Languages: Python, Core Java, C, C++...
-  [2] resume.pdf (page 1) — Web Technologies: JavaScript, HTML, JSON, CSS...
-```
-
----
-
-## Deploy to AWS (Optional)
-
-If you want a live URL to share:
-```bash
-sam build
-sam deploy --guided
-# Follow prompts — no API key parameters needed!
-# Copy the ApiUrl output and add to .env as API_URL
-```
-
----
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 aws-rag-demo/
-├── run_local.py           ← START HERE — full local pipeline
+├── streamlit_app.py       ← Web UI (Streamlit)
+├── run_local.py           ← Command-line RAG pipeline
 ├── ingest/
-│   ├── app.py             ← Lambda: S3 → chunk → embed → ChromaDB
+│   ├── app.py             ← AWS Lambda: S3 → chunk → embed → ChromaDB
 │   └── requirements.txt
 ├── query/
-│   ├── app.py             ← Lambda: question → retrieve → Ollama → answer
+│   ├── app.py             ← AWS Lambda: question → retrieve → LLM → answer
 │   └── requirements.txt
 ├── tests/
-│   ├── test_ingest.py
-│   └── test_query.py
+│   ├── test_ingest.py     ← Unit tests for ingestion
+│   └── test_query.py      ← Unit tests for query
 ├── scripts/
-│   ├── upload_docs.sh
-│   └── test_api.sh
+│   ├── upload_docs.sh     ← Upload docs to S3
+│   └── test_api.sh        ← Test deployed API
 ├── docs/                  ← Put your PDFs/TXTs here
-├── template.yaml          ← AWS SAM (optional cloud deploy)
-├── Makefile
-└── .env.example
+├── template.yaml          ← AWS SAM infrastructure (optional)
+├── requirements.txt       ← Python dependencies
+├── Makefile               ← Dev shortcuts
+└── .env.example           ← Environment variable template
 ```
 
 ---
 
-## Author
+## ☁️ Deploy to AWS (Optional)
 
-**Arshie Fatima** — AI Engineer  
-[GitHub](https://github.com/arshiefatima) · [LinkedIn](https://www.linkedin.com/in/arshie-fatima-1707361ab)
+This project is also deployable to AWS serverless infrastructure:
+
+```bash
+# Install AWS SAM CLI
+# Configure AWS credentials: aws configure
+
+sam build
+sam deploy --guided
+```
+
+**AWS Resources created automatically:**
+- S3 Bucket (document storage)
+- Lambda Functions (ingest + query)
+- EFS (persistent ChromaDB storage)
+- API Gateway (REST endpoint)
+- VPC + Networking
+
+**Estimated cost: < $1/month** on AWS Free Tier for light usage.
+
+---
+
+## 💡 Example Usage
+
+```
+Question: What are the main AI skills mentioned in the resume?
+
+Answer:
+Based on the document, the main AI skills include:
+- LLMs and RAG pipeline development
+- LangChain and LangGraph for agentic workflows
+- Prompt engineering and LLM evaluation
+- Vector databases (Pinecone, ChromaDB)
+- Multi-agent AI system design
+
+Sources used:
+  [1] AI_resume.pdf (page 1) — AI/LLM: LLMs, RAG, LangChain, LangGraph...
+  [2] AI_resume.pdf (page 1) — Built and optimized RAG-based systems...
+```
+
+---
+
+## 🧪 Run Tests
+
+```bash
+pytest tests/ -v
+```
+
+---
+
+## 📋 Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
+```env
+# No API keys needed for local use!
+CHROMA_PATH=./chroma_local
+CHROMA_COLLECTION=rag_docs
+EMBED_MODEL=all-MiniLM-L6-v2
+OLLAMA_URL=http://localhost:11434
+OLLAMA_MODEL=mistral:latest
+```
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Add support for DOCX files
+- [ ] Multi-document comparison
+- [ ] Chat history export
+- [ ] AWS deployment one-click script
+- [ ] Support for OpenAI/Anthropic API (optional)
+- [ ] Docker containerization
+
+---
+
+## 👩‍💻 Author
+
+**Arshie Fatima** — AI Engineer
+
+[![GitHub](https://img.shields.io/badge/GitHub-arshiefatima-black?style=flat&logo=github)](https://github.com/arshiefatima)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Arshie_Fatima-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/arshie-fatima-1707361ab)
+
+---
+
+## 📄 License
+
+MIT License — feel free to use, modify and distribute.
+
+---
+
+*Built with ❤️ using LangChain, ChromaDB, Ollama, and Streamlit*
