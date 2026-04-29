@@ -21,13 +21,13 @@
 > *Upload a document, ask questions, get AI-powered answers with source citations*
 
 <!-- Replace with your actual screenshot -->
-![Chat Interface](screenshots/chat_interface.png)
+![output](screenshots/output.png)
 
 ### Document Upload & Ingestion
 > *Drag and drop any PDF or TXT — automatically chunked, embedded and stored*
 
 <!-- Replace with your actual screenshot -->
-![Document Upload](screenshots/document_upload.png)
+![chunked resume](screenshots/chunked resume.png)
 
 ---
 
