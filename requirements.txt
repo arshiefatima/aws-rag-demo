@@ -1,4 +1,8 @@
-streamlit
-langchain
-langchain-community
-pypdf
+streamlit==1.35.0
+chromadb==0.5.0
+sentence-transformers==3.0.1
+pypdf==4.2.0
+langchain==0.1.20
+langchain-community==0.0.38
+langchain-text-splitters==0.0.2
+requests==2.31.0
