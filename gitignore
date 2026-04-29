@@ -1,0 +1,19 @@
+.env
+*.env
+.aws-sam/
+samconfig.toml
+__pycache__/
+*.pyc
+.Python
+venv/
+.venv/
+chroma_local/       # local ChromaDB — don't commit this
+*.sqlite3
+.DS_Store
+Thumbs.db
+*.log
+.coverage
+htmlcov/
+docs/*.pdf
+docs/*.txt
+docs/*.docx
